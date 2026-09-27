@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Final Birthday Wish</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="page">
+      <div class="hearts" id="hearts"></div>
+
+      <div class="card">
+        <div class="badge">Forever loved</div>
+        <h1>Happy<br />Birthday</h1>
+        <div class="name">Lizaa</div>
+
+        <div class="message">
+          Happy 21st birthday, my love. You are my peace, my joy, and the sweetest dream I never want to wake up from. I wish you a life full of love, laughter, beautiful memories, and endless blessings.
+        </div>
+
+        <button class="btn" id="finalBtn">Reveal final surprise</button>
+
+        <div class="hidden-box" id="finalMsg">
+          I love you more than words can say. May your heart always feel safe, your days always feel bright, and your future always be full of love, success, and happiness. Happy Birthday, Lizaa — forever yours.
+        </div>
+
+        <div class="btn-row">
+          <a href="page2.html" class="btn secondary">Back</a>
+          <a href="index.html" class="btn">Home</a>
+          <button class="btn secondary" id="musicBtn" type="button">Play Music</button>
+        </div>
+
+        <div class="share-box" id="shareBtn">Copy link</div>
+      </div>
+    </div>
+
+    <script>
+      const shareBtn = document.getElementById('shareBtn');
+      shareBtn.addEventListener('click', async () => {
+        const url = window.location.href;
+        try {
+          await navigator.clipboard.writeText(url);
+          shareBtn.textContent = 'Link copied!';
+        } catch {
+          shareBtn.textContent = 'Open in browser to copy link';
+        }
+      });
+
+      let audioCtx = null;
+      function playMelody() {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        if (!audioCtx) {
+          audioCtx = new AudioCtx();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+
+        const melody = [523.25, 659.25, 783.99, 659.25, 523.25, 392.0, 659.25, 783.99];
+        const now = audioCtx.currentTime + 0.06;
+        melody.forEach((freq, i) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.value = freq;
+          gain.gain.value = 0.0001;
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now + i * 0.26);
+          gain.gain.exponentialRampToValueAtTime(0.11, now + i * 0.26 + 0.04);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.26 + 0.18);
+          osc.stop(now + i * 0.26 + 0.19);
+        });
+      }
+
+      const musicBtn = document.getElementById('musicBtn');
+      if (musicBtn) {
+        musicBtn.addEventListener('click', playMelody);
+      }
+      document.addEventListener('pointerdown', playMelody, { once: true });
+
+      const finalBtn = document.getElementById('finalBtn');
+      const finalMsg = document.getElementById('finalMsg');
+
+      finalBtn.addEventListener('click', () => {
+        finalMsg.classList.toggle('show');
+      });
+
+      const hearts = document.getElementById('hearts');
+      for (let i = 0; i < 28; i++) {
+        const heart = document.createElement('span');
+        heart.className = 'heart';
+        heart.style.left = Math.random() * 100 + '%';
+        heart.style.top = Math.random() * 100 + '%';
+        heart.style.animationDelay = (Math.random() * 8).toFixed(2) + 's';
+        heart.style.animationDuration = (5 + Math.random() * 7).toFixed(2) + 's';
+        hearts.appendChild(heart);
+      }
+
+      for (let i = 0; i < 20; i++) {
+        const sparkle = document.createElement('span');
+        sparkle.className = 'sparkle';
+        sparkle.style.left = Math.random() * 100 + '%';
+        sparkle.style.top = Math.random() * 100 + '%';
+        sparkle.style.animationDelay = (Math.random() * 3).toFixed(2) + 's';
+        hearts.appendChild(sparkle);
+      }
+
+      for (let i = 0; i < 8; i++) {
+        const firework = document.createElement('span');
+        firework.className = 'firework';
+        firework.style.left = (20 + Math.random() * 60) + '%';
+        firework.style.top = (20 + Math.random() * 60) + '%';
+        firework.style.animationDelay = (Math.random() * 4).toFixed(2) + 's';
+        hearts.appendChild(firework);
+      }
+    </script>
+  </body>
+</html>

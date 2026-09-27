@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happy Birthday Lizaa</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="page">
+      <div class="hearts" id="hearts"></div>
+
+      <div class="card">
+        <div class="badge">21st Birthday</div>
+        <h1>Happy<br />Birthday</h1>
+        <div class="name">Lizaa</div>
+
+        <div class="message">
+          Today is a celebration of your beautiful heart, your kind soul, and the joy you bring into every life you touch.
+        </div>
+
+        <div class="btn-row">
+          <a href="page2.html" class="btn">Open Wish</a>
+          <button class="btn secondary" id="musicBtn" type="button">Play Music</button>
+        </div>
+
+        <div class="share-box" id="shareBtn">Copy link</div>
+        <div class="footer-note">Made with love</div>
+      </div>
+    </div>
+
+    <script>
+      const shareBtn = document.getElementById('shareBtn');
+      shareBtn.addEventListener('click', async () => {
+        const url = window.location.href;
+        try {
+          await navigator.clipboard.writeText(url);
+          shareBtn.textContent = 'Link copied!';
+        } catch {
+          shareBtn.textContent = 'Open in browser to copy link';
+        }
+      });
+
+      let audioCtx = null;
+      function playMelody() {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        if (!audioCtx) {
+          audioCtx = new AudioCtx();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+
+        const melody = [261.63, 329.63, 392.0, 523.25, 392.0, 329.63, 293.66, 329.63];
+        const now = audioCtx.currentTime + 0.06;
+        melody.forEach((freq, i) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.value = freq;
+          gain.gain.value = 0.0001;
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now + i * 0.28);
+          gain.gain.exponentialRampToValueAtTime(0.12, now + i * 0.28 + 0.04);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.28 + 0.21);
+          osc.stop(now + i * 0.28 + 0.22);
+        });
+      }
+
+      const musicBtn = document.getElementById('musicBtn');
+      if (musicBtn) {
+        musicBtn.addEventListener('click', playMelody);
+      }
+      document.addEventListener('pointerdown', playMelody, { once: true });
+
+      const hearts = document.getElementById('hearts');
+      for (let i = 0; i < 24; i++) {
+        const heart = document.createElement('span');
+        heart.className = 'heart';
+        heart.style.left = Math.random() * 100 + '%';
+        heart.style.top = Math.random() * 100 + '%';
+        heart.style.animationDelay = (Math.random() * 8).toFixed(2) + 's';
+        heart.style.animationDuration = (6 + Math.random() * 6).toFixed(2) + 's';
+        hearts.appendChild(heart);
+      }
+
+      for (let i = 0; i < 22; i++) {
+        const sparkle = document.createElement('span');
+        sparkle.className = 'sparkle';
+        sparkle.style.left = Math.random() * 100 + '%';
+        sparkle.style.top = Math.random() * 100 + '%';
+        sparkle.style.animationDelay = (Math.random() * 3).toFixed(2) + 's';
+        hearts.appendChild(sparkle);
+      }
+
+      for (let i = 0; i < 8; i++) {
+        const firework = document.createElement('span');
+        firework.className = 'firework';
+        firework.style.left = (20 + Math.random() * 60) + '%';
+        firework.style.top = (20 + Math.random() * 60) + '%';
+        firework.style.animationDelay = (Math.random() * 4).toFixed(2) + 's';
+        hearts.appendChild(firework);
+      }
+    </script>
+  </body>
+</html>
